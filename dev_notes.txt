@@ -1,0 +1,41 @@
+
+
+installed django:
+	
+	pip install Django (I think?)
+
+running with django:
+
+	python manage.py runserver 0.0.0.0:8000
+
+installed gunicorn:
+
+	pip install gunicorn
+
+test gunicorn:
+
+	gunicorn --workers=2 homeauto.wsgi -b=0.0.0.0:8000
+
+deploy gunicorn:
+
+	sudo mkdir -pv /var/{log,run}/gunicorn/
+	sudo chown -cR ejk:ejk /var/{log,run}/gunicorn/
+	sudo cp config/gunicorn/gunicorn.service /etc/systemd/system
+	sudo systemctl restart gunicorn
+	sudo systemctl status gunicorn
+
+install nginx:
+
+	sudo apt install nginx
+
+configure nginx:
+
+	sudo mv /etc/nginx/nginx.conf /etc/nginx/nginx.bak
+	sudo cp config/nginx/nginx.conf /etc/nginx
+	mkdir -p /var/www/static
+	sudo chown -cR ejk:ejk /var/www/static
+	sudo systemctl restart nginx
+
+Refs:
+  Gunicorn systemd config: https://docs.gunicorn.org/en/stable/deploy.html
+	Additional help: https://realpython.com/django-nginx-gunicorn/#replacing-wsgiserver-with-gunicorn
