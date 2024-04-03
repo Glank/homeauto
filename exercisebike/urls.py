@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
   path('', views.index, name='index'),
   path('xbike/cmd', views.cmd, name='cmd'),
-  path('xbike/setresistance/<int:resistance>', views.set_resistance, name='set_resistance'),
+  path('xbike/sendcmd/<slug:command>', views.send_cmd, name='send_cmd'),
 ]
