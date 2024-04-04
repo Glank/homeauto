@@ -1,14 +1,21 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+import json
 
 from .models import Command
 
-def index(request):
-  return render(request, "index.html", {})
+def home(request):
+  return redirect('index')
 
-def send_cmd(request, command):
-  command = Command(text=command)
+def index(request):
+  return render(request, "xbike/index.html", {})
+
+def send_cmd(request):
+  print(request.body)
+  post_data = json.loads(request.body)
+  print(post_data)
+  command = Command(text=post_data['command'])
   command.save()
   return redirect("index")
 

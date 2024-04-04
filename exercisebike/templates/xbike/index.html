@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+[class*="col-"] {
+  float: left;
+  padding: 0px;
+}
+
+html {
+  font-family: "Lucida Sans", sans-serif;
+}
+
+.selector {
+  margin: 0;
+  padding: 5px;
+}
+
+.info {
+  margin: 0;
+  padding: 5px;
+}
+.info ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.graph {
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  margin: 0px;
+  padding: 5px;
+}
+.graph canvas {
+  border: 1px solid #fff;
+  aspect-ratio: 9 / 6;
+  width: 100%;
+}
+.graph canvas::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/*
+My phone's screen width:
+Vertical: 368
+Horizontal: 762
+*/
+/* For mobile phones: */
+[class*="col-"] {
+  width: 100%;
+}
+@media only screen and (min-width: 760px) {
+  /* For horizontal: */
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+}
+</style>
+</head>
+<body>
+<div class="col-4">
+  <div class="col-12 selector">
+    Resistance:
+    <input type="range" id="resistance" min="0" max="9"/>
+    <label id="resistance_setting">-</label>
+  </div>
+
+  <div class="col-12 info">
+    <ul>
+      <li>Speed: 60 rpm</li>
+      <li>HR: 90.7 bpm</li>
+      <li>Min Speed: 30 rpm</li>
+    </ul>
+  </div>
+</div>
+<div class="col-8 graph">
+  Heart Rate and Speed
+  <canvas id="graph"></canvas>
+</div>
+
+<script>
+var csrftoken = '{{ csrf_token }}';
+function send_cmd(cmd) {
+  console.log("Sending cmd '"+cmd+"'...");
+  var url = "{% url 'send_cmd' %}";
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('X-CSRFToken', csrftoken);
+  xhr.send(JSON.stringify({
+      "command": cmd
+  }));
+}
+function update_resistance_view(event) {
+  const source = event.target || event.srcElement; 
+  var lbl = document.getElementById("resistance_setting");
+  lbl.innerHTML = ""+source.value;
+}
+function update_resistance(event) {
+  const source = event.target || event.srcElement; 
+  send_cmd("r"+source.value);
+}
+document.getElementById("resistance").addEventListener("input", update_resistance_view);
+document.getElementById("resistance").addEventListener("change", update_resistance);
+</script>
+
+</body>
+</html>
