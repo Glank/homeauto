@@ -39,3 +39,6 @@ configure nginx:
 Refs:
   Gunicorn systemd config: https://docs.gunicorn.org/en/stable/deploy.html
 	Additional help: https://realpython.com/django-nginx-gunicorn/#replacing-wsgiserver-with-gunicorn
+
+Updating production db:
+  python manage.py migrate --settings=homeauto.settings.production
